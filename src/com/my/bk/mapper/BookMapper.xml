@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.my.bk.mapper.BookMapper">
+	<resultMap type="com.my.bk.entities.Book" id="bookResultMap">
+		<id property="id" column="id"/>
+		<result property="title" column="title"/>
+		<result property="author" column="author" />
+		<result property="price" column="price" />
+		<result property="sales" column="sales" />
+		<result property="stock" column="stock" />
+		<result property="imgPath" column="img_path" />
+		<result property="isDel" column="img_del" />
+	</resultMap>
+	
+	<sql id="queryContact">
+		WHERE is_del=false  
+		<if test="title != null">
+			title LIKE #{title}
+		</if>
+		<if test="author != null">
+			author LIKE #{author}
+		</if>
+		<if test="minPrice!= null&amp;&amp;maxPrice!=null">
+			price BETWEEN #{minPrice} AND #{maxPrice}
+		</if>
+	</sql>
+	
+	<select id="getBooks" resultMap="bookResultMap" parameterType="hashMap">
+		SELECT 
+			id,title,author,price,sales,stock,img_path
+		FROM 
+			bs_book
+		<include refid="queryContact"/>
+		LIMIT 
+			${index},${pageSize}
+	</select>
+	
+	<select id="getTotalBooksNo" resultType="int">
+		SELECT count(id)
+		FROM bs_book 
+		<include refid="queryContact"/>
+	</select>
+	
+	<select id="getHotBooks" resultMap="bookResultMap">
+		SELECT 
+			id,title,author,price,sales,stock,img_path 
+		FROM 
+			bs_book 
+		WHERE
+			is_del=false 
+		ORDER BY 
+			sales DESC 
+		LIMIT 
+			0,10
+	</select>
+	
+</mapper>

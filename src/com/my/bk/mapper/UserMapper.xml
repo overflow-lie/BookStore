@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.my.bk.mapper.UserMapper">
+
+	<resultMap type="User" id="userResultMap">
+		<id column="id" property="uId"/>
+		<result column="u_name" property="uName"/>
+		<result column="u_password" property="uPassword"/>
+		<result column="u_email" property="uEmail"/>
+		<result column="u_salt" property="uSalt"/>
+		<association property="role" column="r_id" select="com.my.bk.mapper.RoleMapper.getRoleById"></association>
+	</resultMap>
+
+	<select id="countUserName" resultType="Integer" parameterType="String">
+		select count(u_name) from bs_user where u_name=#{username}
+	</select>
+	
+	<select id="countEmail" resultType="Integer" parameterType="String">
+		select count(u_email) from bs_user where u_email=#{email}
+	</select>
+	
+	<insert id="save" parameterType="com.my.bk.entities.User">
+		insert into bs_user(u_name,u_password,u_email,r_id,u_salt) value(#{uName},#{uPassword},#{uEmail},#{role.id},#{uSalt})
+	</insert>
+	
+	<select id="getUserByUserName" resultMap="userResultMap">
+		select * from bs_user where u_name=#{username}
+	</select>
+	
+	<select id="getUserByEmail" resultMap="userResultMap">
+		select * from bs_user where u_email=#{email}
+	</select>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<context:component-scan base-package="com.my.bk">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+
+	<context:property-placeholder location="classpath:db.properties" />
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="user" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="jdbcUrl" value="${jdbc.jdbcUrl}" />
+		<property name="driverClass" value="${jdbc.driverClass}" />
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="typeAliasesPackage" value="com.my.bk"></property>
+		<property name="configLocation" value="classpath:mybatis_config.xml"></property>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.my.bk.mapper"></property>
+	</bean>
+	
+	<!-- Shiro-->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+	 	<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+	</bean>
+	
+	 <bean id="userRealm" class="com.my.bk.realms.UserRealm">
+	 	<property name="credentialsMatcher">
+	 		<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+	 			<!-- 密码的加密方式 -->
+				<property name="hashAlgorithmName" value="MD5"></property>
+				<!-- 密码的加密次数 -->
+				<property name="hashIterations" value="1024"></property>
+	 		</bean>
+	 	</property>
+	 </bean>
+	 
+	 <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+	 	<property name="cacheManager" ref="cacheManager"/>
+        <property name="realm" ref="userRealm"/>
+	 </bean>
+	 
+	 <!-- 配置 Shiro 的生命周期 Bean 后置处理器. 可以自动的调用 Shiro 在 Spring IOC 容器中 bean 的 init 和 destroy 方法 -->
+     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    
+     <!-- 配置可以在 Spring 中使用 Shiro 注解的 bean. 但前提是必须配置 LifecycleBeanPostProcessor -->
+     <!-- <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+     </bean> -->
+     
+     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+    	<!-- 配置 securityManager 属性. -->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 配置登陆页面. 若某一个资源需要被认证(登陆)后才可以访问, 则 Shiro 会自动的重定向到 loginUrl 指向的页面 -->
+        <property name="loginUrl" value="/login"/>
+        <!-- 配置没有权限访问某一个资源时的响应页面.  -->
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <!-- 配置受保护的资源 -->
+        <property name="filterChainDefinitions">
+            <value>
+            	/** = anon
+            </value>
+        </property>
+    </bean>
+    
+</beans>
+
