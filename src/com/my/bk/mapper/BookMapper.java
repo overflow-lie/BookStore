@@ -3,6 +3,8 @@ package com.my.bk.mapper;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.my.bk.entities.Book;
 
 public interface BookMapper {
@@ -12,4 +14,8 @@ public interface BookMapper {
 	public int getTotalBooksNo();
 
 	public List<Book> getHotBooks();
+
+	public Book getBookById(@Param("bookId")String bookId);
+
+	public void updateBook(Book book);
 }

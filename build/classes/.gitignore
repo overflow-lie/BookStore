@@ -1,10 +1,1 @@
-/applicationContext.xml
 /com/
-/db.properties
-/ehcache.xml
-/i18n.properties
-/i18n_en_US.properties
-/i18n_zh_CN.properties
-/mybatis_config.xml
-/shiro.ini
-/spring_mvc.xml

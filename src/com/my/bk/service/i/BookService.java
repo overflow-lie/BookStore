@@ -12,4 +12,8 @@ public interface BookService {
 	Page<Book> findBook(Map<String,Object> params);
 	
 	List<Book> getHotBookList();
+
+	Book getBookById(String bookId);
+
+	void updateBook(Book book);
 }

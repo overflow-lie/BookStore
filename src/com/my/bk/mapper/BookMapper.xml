@@ -54,4 +54,15 @@
 			0,10
 	</select>
 	
+	<select id="getBookById" resultMap="bookResultMap">
+		SELECT id,title,author,price,sales,stock,img_path 
+		FROM bs_book
+		WHERE is_del=false
+		And   id=#{bookId}
+	</select>
+	
+	<update id="updateBook">
+		update bs_book set title=#{title},author=#{author},price=#{price},stock=#{stock}
+		where id=#{id}
+	</update>
 </mapper>

@@ -52,6 +52,17 @@ public class BookServiceImpl implements BookService{
 		return hotBooks;
 	}
 
+	@Override
+	public Book getBookById(String bookId) {
+		
+		return bookMapper.getBookById(bookId);
+	}
+
+	@Override
+	public void updateBook(Book book) {
+		bookMapper.updateBook(book);
+	}
+
 
 	
 
