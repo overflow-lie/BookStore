@@ -35,6 +35,36 @@
 			${index},${pageSize}
 	</select>
 	
+	<select id="getBooksFromManager" resultMap="bookResultMap" parameterType="hashMap">
+		SELECT 
+			id,title,author,price,sales,stock,img_path
+		FROM 
+			bs_book
+		<where>
+			<if test="title != null">
+				title LIKE #{title}
+			</if>
+			<if test="author != null">
+				author LIKE #{author}
+			</if>
+		</where>
+		LIMIT 
+			${index},${pageSize}
+	</select>
+	
+	<select id="getTotalBooksNoForManager" resultType="int">
+		SELECT count(id)
+		FROM bs_book 
+		<where>
+			<if test="title != null">
+				title LIKE #{title}
+			</if>
+			<if test="author != null">
+				author LIKE #{author}
+			</if>
+		</where>
+	</select>
+	
 	<select id="getTotalBooksNo" resultType="int">
 		SELECT count(id)
 		FROM bs_book 
@@ -64,5 +94,10 @@
 	<update id="updateBook">
 		update bs_book set title=#{title},author=#{author},price=#{price},stock=#{stock}
 		where id=#{id}
+	</update>
+	
+	<update id="delBook">
+		update bs_book set is_del=true
+		where id=#{bookId}
 	</update>
 </mapper>

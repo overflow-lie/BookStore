@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="my-page" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="path" value="${pageContext.request.contextPath }" />
@@ -200,12 +201,12 @@ table.hovertable td {
 			<div class="page_title">
 				<h2 class="fl">按条件查询：</h2>
 				<form id="search_form" action="${path }/manager/book/list/1">
-					<input type="text" class="textbox" placeholder="书名" /> <input
-						type="text" class="textbox" placeholder="作者" /> <input type="text"
-						class="textbox" placeholder="价格" /> <input type="text"
-						class="textbox" placeholder="销量" /> <input type="text"
-						class="textbox" placeholder="库存" /> <a id="search_btn"
-						class="fr top_rt_btn">查询</a>
+					<input type="text" name="search_LIKES_title" class="textbox" placeholder="书名" /> 
+					<input type="text" name="search_LIKES_author" class="textbox" placeholder="作者" /> 
+					<input type="text" class="textbox" placeholder="价格" /> 
+					<input type="text" class="textbox" placeholder="销量" /> 
+					<input type="text" name="search_EQS_title" class="textbox" placeholder="库存" /> 
+					<a id="search_btn" class="fr top_rt_btn">查询</a>
 				</form>
 			</div>
 			<table class="hovertable">
@@ -216,6 +217,7 @@ table.hovertable td {
 					<th>价格</th>
 					<th>销售量</th>
 					<th>库存</th>
+					<th>状态</th>
 					<th colspan="2">操作</th>
 				</tr>
 				<c:forEach items="${page.content }" var="book">
@@ -228,14 +230,26 @@ table.hovertable td {
 						<td>${book.price }</td>
 						<td>${book.sales }</td>
 						<td>${book.stock }</td>
-						<td><a href="${path }/manager/book/update/${book.id}" id="update_btn" class="inner_btn">更改</a></td>
-						<td><a href="#" class="inner_btn">删除</a></td>
+						<td>${book.state }</td>
+						<td><a href="${path }/manager/book/${book.id}"
+							id="update_btn" class="inner_btn">更改</a></td>
+						<td><a href="${path }/manager/book/${book.id}"
+							id="delete_btn" class="inner_btn">删除</a></td>
 					</tr>
 				</c:forEach>
 			</table>
+
 			<!--弹出框效果-->
 			<script>
 				$(document).ready(function() {
+					$("a[id='delete_btn']").click(function() {
+						var url = $(this).attr("href");
+						var title=$(this).parents("tr").find("td:eq(1)").text();
+						$("#pop_bg_del").fadeIn();
+						$("#del_form").attr("action",url);
+						$(".delMsg").text("确定删除图书《"+title+"》?");
+						return false;
+					});
 					//弹出文本性提示框
 					$("a[id='update_btn']").click(function() {
 						var url = $(this).attr("href");
@@ -247,107 +261,82 @@ table.hovertable td {
 							$("input[name='stock']").val(data.stock);
 							$("input[name='id']").val(data.id);
 						});
-						$(".pop_bg").fadeIn();
+						$("#pop_bg_upd").fadeIn();
 						return false;
 					});
 					//弹出：确认按钮
-					$(".trueBtn").click(function() {
+					$("#trueUpdBtn").click(function() {
 						$("#updateForm").submit();						
+						$(".pop_bg").fadeOut();
+					});
+					$("#trueDelBtn").click(function() {
+						$("#del_form").submit();						
 						$(".pop_bg").fadeOut();
 					});
 					//弹出：取消或关闭按钮
 					$(".falseBtn").click(function() {
-						alert("你点击了取消/关闭！");//测试
 						$(".pop_bg").fadeOut();
 					});
 				});
 			</script>
-			<section class="pop_bg">
+			<section id="pop_bg_upd" class="pop_bg">
 				<div class="pop_cont">
 					<!--title-->
 					<h3>图书信息修改</h3>
 					<!--content-->
 					<div class="pop_cont_input">
-						<form:form id="updateForm" action="${path }/manager/book/update" method="put" modelAttribute="book">
+						<form:form id="updateForm" action="${path }/manager/book"
+							method="put" modelAttribute="book">
+							<input name="_method" type="hidden" value="PUT">
 							<input name="id" type="hidden" value="${book.id }">
 							<ul>
-								<li><span>封面：</span> <input type="file"
-									class="textbox" /></li>
-								<li><span>书名：</span> <input value="${book.title }" name="title" type="text" placeholder="请输入书名"
-									class="textbox" /></li>
-							    <li>
-						          <span>作者：</span>
-						          <input value="${book.author }" name="author" type="text" placeholder="请输入作者" class="textbox"/>
-						        </li>
-						        <li>
-						          <span>价格：</span>
-						          <input value="${book.price }" name="price" type="text" placeholder="请输入价格" class="textbox"/>
-						        </li>
-						        <li>
-						          <span>库存：</span>
-						          <input value="${book.stock }" name="stock" type="text" placeholder="请输入库存" class="textbox"/>
-						        </li>
+								<li><span class="item_name" style="width: 120px;">封面：</span>
+									<label class="uploadImg"> <input type="file" /> <span>上传图片</span>
+								</label></li>
+								<li><span>书名：</span> <input value="${book.title }"
+									name="title" type="text" placeholder="请输入书名" class="textbox" /></li>
+								<li><span>作者：</span> <input value="${book.author }"
+									name="author" type="text" placeholder="请输入作者" class="textbox" />
+								</li>
+								<li><span>价格：</span> <input value="${book.price }"
+									name="price" type="text" placeholder="请输入价格" class="textbox" />
+								</li>
+								<li><span>库存：</span> <input value="${book.stock }"
+									name="stock" type="text" placeholder="请输入库存" class="textbox" />
+								</li>
 							</ul>
 						</form:form>
 					</div>
 					<div class="btm_btn">
-						<input type="button" value="确认" class="input_btn trueBtn" /> <input
-							type="button" value="关闭" class="input_btn falseBtn" />
+						<input id="trueUpdBtn" type="button" value="确认"
+							class="input_btn trueBtn" /> <input type="button" value="关闭"
+							class="input_btn falseBtn" />
+					</div>
+				</div>
+			</section>
+			<section id="pop_bg_del" class="pop_bg">
+				<div class="pop_cont">
+					<!--title-->
+					<h3>删除图书</h3>
+					<!--content-->
+					<div class="pop_cont_input">
+						<ul>
+							<li><span class="delMsg"></span></li>
+						</ul>
+						<form id="del_form" action="" method="post">
+							<input type="hidden" name="_method" value="DELETE">
+						</form>
+					</div>
+					<div class="btm_btn">
+						<input id="trueDelBtn" type="button" value="确认"
+							class="input_btn trueBtn" /> <input type="button" value="关闭"
+							class="input_btn falseBtn" />
 					</div>
 				</div>
 			</section>
 			<!--结束：弹出框效果-->
-			<c:choose>
-				<c:when test="${page.totalPages<10}">
-					<c:set var="begin" value="1"></c:set>
-					<c:set var="end" value="${page.totalPages}"></c:set>
-				</c:when>
-				<c:when test="${page.pageNo<6}">
-					<c:set var="begin" value="1"></c:set>
-					<c:set var="end" value="10"></c:set>
-				</c:when>
-				<c:otherwise>
-					<c:set var="begin" value="${page.pageNo-4 }"></c:set>
-					<c:set var="end" value="${page.pageNo+5 }"></c:set>
-					<c:if test="${end > page.totalPages }">
-						<c:set var="end" value="${page.totalPages }"></c:set>
-						<c:set var="begin" value="${end-9 }"></c:set>
-					</c:if>
-				</c:otherwise>
-			</c:choose>
-			<aside class="paging">
-				<c:if test="${page.hasPrev }">
-					<a
-						href="${prePath }/${page.prevPage}<c:if test="${queryParameters }!=null">?${queryParameters }</c:if>"
-						aria-label="Previous">第一页</a>
-				</c:if>
-				<c:forEach begin="${begin }" end="${end}" var="index">
-					<c:choose>
-						<c:when test="${page.pageNo == index }">
-							<a href="${index}">${index }</a>
-						</c:when>
-						<c:otherwise>
-							<a
-								href="${prePath }/${index}<c:if test="${queryParameters }!=null">?${queryParameters }</c:if>">${index }</a>
-						</c:otherwise>
-					</c:choose>
-				</c:forEach>
-				<c:if test="${page.hasNext }">
-					<a
-						href="${prePath }/${page.nextPage }<c:if test="${queryParameters }!=null">?${queryParameters }</c:if>"
-						aria-label="next">最后一页</a>
-					</li>
-				</c:if>
-				<!--   
-       <a>第一页</a>
-       <a>1</a>
-       <a>2</a>
-       <a>3</a>
-       <a>…</a>
-       <a>1004</a>
-       <a>最后一页</a> 
-     -->
-			</aside>
+			
+			<my-page:adm-page page="${page }" prePath="${path }${page.path }" queryParameters="${queryString }" ></my-page:adm-page>
 	</section>
 	</div>
 	</section>

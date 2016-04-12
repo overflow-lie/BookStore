@@ -91,6 +91,16 @@ public class Book implements Serializable{
 		this.isDel = isDel;
 	}
 	
+	public String getState(){
+		if (isDel()) {
+			return "删除";
+		}
+		if(getStock()<=0){
+			return "缺货";
+		}
+		return "热销";
+	}
+	
 	@Override
 	public String toString() {
 		return "Book [id=" + id + ", title=" + title + ", author=" + author + ", price=" + price + ", sales=" + sales

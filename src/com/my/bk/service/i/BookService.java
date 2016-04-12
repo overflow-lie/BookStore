@@ -16,4 +16,8 @@ public interface BookService {
 	Book getBookById(String bookId);
 
 	void updateBook(Book book);
+
+	void deleteBook(String bookId);
+	
+	Page<Book> getBooksFromManager(String pageNoStr,Map<String,Object> params);
 }

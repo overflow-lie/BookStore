@@ -18,4 +18,10 @@ public interface BookMapper {
 	public Book getBookById(@Param("bookId")String bookId);
 
 	public void updateBook(Book book);
+
+	public void delBook(@Param("bookId")String bookId);
+	
+	public List<Book> getBooksFromManager(Map<String,Object> map);
+	
+	public int getTotalBooksNoForManager(Map<String,Object> map);
 }
