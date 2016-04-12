@@ -100,4 +100,8 @@
 		update bs_book set is_del=true
 		where id=#{bookId}
 	</update>
+	
+	<insert id="saveBook">
+		insert into bs_book(img_path,title,author,price,stock) value(#{imgPath},#{title},#{author},#{price},#{stock})
+	</insert>
 </mapper>

@@ -20,4 +20,6 @@ public interface BookService {
 	void deleteBook(String bookId);
 	
 	Page<Book> getBooksFromManager(String pageNoStr,Map<String,Object> params);
+
+	void addBook(Book book);
 }

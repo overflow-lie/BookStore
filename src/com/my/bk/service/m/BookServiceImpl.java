@@ -84,7 +84,6 @@ public class BookServiceImpl implements BookService{
 		
 		int index = page.getPreIndex();
 		
-		
 		map.put("index", index);
 		map.put("pageSize", page.getPageSize());
 		
@@ -94,6 +93,11 @@ public class BookServiceImpl implements BookService{
 		
 		return page;
 		
+	}
+
+	@Override
+	public void addBook(Book book) {
+		bookMapper.saveBook(book);
 	}
 
 

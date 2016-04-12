@@ -50,6 +50,12 @@ public class ManagerHandler {
 		return book;
 	}
 	
+	@RequestMapping(value="/book",method=RequestMethod.POST)
+	public String addBook(Book book){
+		bookService.addBook(book);
+		return "redirect:/manager/book/list/0";
+	}
+	
 	@RequestMapping(value="/book",method=RequestMethod.PUT)
 	public String updateBook(Book book){
 		bookService.updateBook(book);
@@ -67,5 +73,6 @@ public class ManagerHandler {
 		if (id != null) {
 			map.put("book", bookService.getBookById(id));
 		}
+		map.put("book", new Book());
 	}
 }

@@ -92,17 +92,7 @@ table.hovertable td {
 					<dt>图书信息</dt>
 					<!--当前链接则添加class:active-->
 					<dd>
-						<a id="book_list" href="${path }/manager/book/list/1"
-							class="active" ta>图书列表</a>
-					</dd>
-					<dd>
-						<a href="#">图书分类</a>
-					</dd>
-					<dd>
-						<a href="#">图书属性</a>
-					</dd>
-					<dd>
-						<a href="#">图书管理</a>
+						<a id="book_list" href="${path }/manager/book/list/1" class="active" ta>图书管理</a>
 					</dd>
 				</dl>
 			</li>
@@ -237,6 +227,9 @@ table.hovertable td {
 							id="delete_btn" class="inner_btn">删除</a></td>
 					</tr>
 				</c:forEach>
+				<tr>
+					<td colspan="9" align="center"><a id="insert_btn" href="#">+添加图书</a></td>
+				</tr>
 			</table>
 
 			<!--弹出框效果-->
@@ -251,16 +244,29 @@ table.hovertable td {
 						return false;
 					});
 					//弹出文本性提示框
+					$("a[id='insert_btn']").click(function(){
+						$("#title").text("添加图书");
+						$("input[name='title']").val("");
+						$("input[name='author']").val("");
+						$("input[name='price']").val("");
+						$("input[name='stock']").val("");
+						$("input[name='id']").val(""); 
+						$("#pushMethod").val("POST");
+						$("#pop_bg_upd").fadeIn();
+					});
+					
 					$("a[id='update_btn']").click(function() {
 						var url = $(this).attr("href");
 						var args={"_method":'GET'};
 						$.post(url,args,function(data){
+							$("#title").text("修改图书");
 							$("input[name='title']").val(data.title);
 							$("input[name='author']").val(data.author);
 							$("input[name='price']").val(data.price);
 							$("input[name='stock']").val(data.stock);
-							$("input[name='id']").val(data.id);
+							$("input[name='id']").val(data.id); 
 						});
+						$("#pushMethod").val("PUT");
 						$("#pop_bg_upd").fadeIn();
 						return false;
 					});
@@ -282,12 +288,12 @@ table.hovertable td {
 			<section id="pop_bg_upd" class="pop_bg">
 				<div class="pop_cont">
 					<!--title-->
-					<h3>图书信息修改</h3>
+					<h3 id="title"></h3>
 					<!--content-->
 					<div class="pop_cont_input">
 						<form:form id="updateForm" action="${path }/manager/book"
-							method="put" modelAttribute="book">
-							<input name="_method" type="hidden" value="PUT">
+							method="post" modelAttribute="book">
+							<input id="pushMethod" name="_method" type="hidden" value="">
 							<input name="id" type="hidden" value="${book.id }">
 							<ul>
 								<li><span class="item_name" style="width: 120px;">封面：</span>
@@ -314,6 +320,7 @@ table.hovertable td {
 					</div>
 				</div>
 			</section>
+			
 			<section id="pop_bg_del" class="pop_bg">
 				<div class="pop_cont">
 					<!--title-->

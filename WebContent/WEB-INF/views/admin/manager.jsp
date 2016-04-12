@@ -48,10 +48,7 @@
    <dl id="idl">
     <dt>图书信息</dt>
     <!--当前链接则添加class:active-->
-    <dd><a href="${path }/manager/book/list/1" >图书列表</a></dd>
-    <dd><a href="#">图书分类</a></dd>
-    <dd><a href="#">图书属性</a></dd>
-    <dd><a href="#">图书管理</a></dd>
+    <dd><a href="${path }/manager/book/list/1" >图书管理</a></dd>
    </dl>
   </li>
   <li>

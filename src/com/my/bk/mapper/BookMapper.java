@@ -24,4 +24,6 @@ public interface BookMapper {
 	public List<Book> getBooksFromManager(Map<String,Object> map);
 	
 	public int getTotalBooksNoForManager(Map<String,Object> map);
+
+	public void saveBook(Book book);
 }
