@@ -64,26 +64,4 @@
 			<input id="path" type="hidden" value="<c:if test="${queryParameters }!=null">?${queryParameters }</c:if>">
 		</ul>
 	</nav>
-	
-	<script type="text/javascript">
-	$(function(){
-		$("#pageNo").change(function(){
-			var pageNo = $(this).val();
-			var url= pageNo+$("#path").val();
-			var reg = /^\d+$/;
-			if(!reg.test(pageNo)){
-				return false;
-			}
-			
-			if(pageNo < 1 || pageNo > parseInt("<%=page.getTotalPages()%>")){
-				return false;
-			}
-			
-			//查询条件需要放入到 class='condition' 的隐藏域中. 
-			window.location.href = url;
-		});
-		
-	});
-		
-	</script>
 </div>

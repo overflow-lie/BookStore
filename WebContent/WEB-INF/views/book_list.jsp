@@ -38,7 +38,7 @@
 									<p></p>
 									<p></p>
 									<div class="blog-btn">
-										<a href="single.html">Read more</a>
+										<a href="${path }/cart/add/0">Read more</a>
 									</div>
 								</div>
 								<div class="clearfix"></div>

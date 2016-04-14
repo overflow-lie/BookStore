@@ -7,10 +7,10 @@
 				<div class="col-md-8 footer-left">
 					<div class="col-md-4 footer-one">
 						<ul>
-							<li><a href="about.html">About us</a></li>
-							<li><a href="careers.html">Careers</a></li>
+							<li><a href="#">About us</a></li>
+							<li><a href="#">Careers</a></li>
 							<li><a href="404.html">Help</a></li>
-							<li><a href="blog.html">Blog</a></li>
+							<li><a href="#">Blog</a></li>
 						</ul>
 					</div>
 					<div class="col-md-4 footer-one">
@@ -18,7 +18,7 @@
 							<li><a href="#">Terms</a></li>
 							<li><a href="#">Payment</a></li>
 							<li><a href="#">Shipping</a></li>
-							<li><a href="contact.html">Contact</a></li>
+							<li><a href="#">Contact</a></li>
 						</ul>
 					</div>
 					<div class="col-md-4 footer-one">

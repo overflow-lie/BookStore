@@ -102,6 +102,6 @@
 	</update>
 	
 	<insert id="saveBook">
-		insert into bs_book(img_path,title,author,price,stock) value(#{imgPath},#{title},#{author},#{price},#{stock})
+		insert into bs_book(img_path,title,author,price,stock,is_del) value(#{imgPath},#{title},#{author},#{price},#{stock},false)
 	</insert>
 </mapper>
